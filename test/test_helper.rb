@@ -12,6 +12,7 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   # test/fixtures/*.ymlにある全てのfixtureをセットアップする
   fixtures :all
+  include ApplicationHelper
 
   # Add more helper methods to be used by all tests here...
   # 全てのテストで使うその他のヘルパーメソッドは省略
