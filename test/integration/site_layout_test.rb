@@ -12,5 +12,8 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     get contact_path # '/contact'
     # <title>full_title("Contact")</title>
     assert_select "title", full_title("Contact")
+    # signupページのテスト
+    get signup_path # '/signup'
+    assert_select "title", full_title("Sign up")
   end
 end
