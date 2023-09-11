@@ -29,4 +29,12 @@ class UserTest < ActiveSupport::TestCase
     @user.email = "a" * 244 + "@example.com" # 256文字の文字列を作る
     assert_not @user.valid? # 失敗、つまり有効性がないならtrue
   end
+
+  test "email validation should accept valid addresses" do
+    valid_addresses = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org first.last@foo.jp alice+bob@baz.cn]
+    valid_addresses.each do |valid_address|
+      @user.email = valid_address
+      assert @user.valid?, "#{valid_address.inspect} should be valid"
+    end
+  end
 end
