@@ -63,4 +63,18 @@ class UserTest < ActiveSupport::TestCase
     @user.save # 保存する
     assert_equal mixed_case_email.downcase, @user.reload.email
   end
+
+  # パスワードが空ではないテスト
+  test "password should be present (nonblank)" do
+    @user.password = @user.password_confirmation = " " * 6
+    # 偽ならパスする
+    assert_not @user.valid?
+  end
+
+  # パスワードが6文字以上のテスト
+  test "password should have a minimum length" do
+    @user.password = @user.password_confirmation = "a" * 5
+    # 偽ならパスする
+    assert_not @user.valid?
+  end
 end
