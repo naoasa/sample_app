@@ -4,7 +4,7 @@ class UserTest < ActiveSupport::TestCase
 
   def setup # 各テストが走る直前に実行される
     @user = User.new(name: "Example User", email: "user@example.com",
-                     password: "foobar", password_confirmation: "foobar")
+                     password: "foobarhoge", password_confirmation: "foobarhoge")
   end
 
   test "should be valid" do
@@ -71,9 +71,9 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
   end
 
-  # パスワードが6文字以上のテスト
+  # パスワードが8文字以上のテスト
   test "password should have a minimum length" do
-    @user.password = @user.password_confirmation = "a" * 5
+    @user.password = @user.password_confirmation = "a" * 7
     # 偽ならパスする
     assert_not @user.valid?
   end
