@@ -11,6 +11,8 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                          password_confirmation: "bar" } }
     end
     assert_response :unprocessable_entity
-    assert_template 'users/new'
+    assert_template 'users/new' # /users/new.html.erbが描画されているか
+    assert_select 'div#error_explanation' # CSSのエラー表示部のid
+    assert_select 'div.field_with_errors' # CSSのエラー表示部のclass
   end
 end
