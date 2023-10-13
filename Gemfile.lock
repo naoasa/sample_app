@@ -126,6 +126,7 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    language_server-protocol (3.17.0.3)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -218,6 +219,10 @@ GEM
     reline (0.3.7)
       io-console (~> 0.5)
     rexml (3.2.6)
+    ruby-lsp (0.11.2)
+      language_server-protocol (~> 3.17.0)
+      sorbet-runtime (>= 0.5.5685)
+      yarp (>= 0.12, < 0.13)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
     sassc (2.4.0)
@@ -234,6 +239,7 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     shellany (0.0.1)
+    sorbet-runtime (0.5.11072)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -268,6 +274,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yarp (0.12.0)
     zeitwerk (2.6.11)
 
 PLATFORMS
@@ -290,6 +297,7 @@ DEPENDENCIES
   puma (= 5.6.4)
   rails (= 7.0.4)
   rails-controller-testing (= 1.0.5)
+  ruby-lsp
   sassc-rails (= 2.1.2)
   selenium-webdriver (= 4.2.0)
   sprockets-rails (= 3.4.2)
