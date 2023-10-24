@@ -5,14 +5,15 @@ require "minitest/reporters"
 Minitest::Reporters.use!
 
 class ActiveSupport::TestCase
-  # Run tests in parallel with specified workers
   # 指定のワーカー数でテストを並列実行する
   parallelize(workers: :number_of_processors)
-
-  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   # test/fixtures/*.ymlにある全てのfixtureをセットアップする
   fixtures :all
   include ApplicationHelper
+  # テストユーザーがログイン中の場合にtrueを返す
+  def is_logged_in?
+    !session[:user_id].nil?
+  end
 
   # Add more helper methods to be used by all tests here...
   # 全てのテストで使うその他のヘルパーメソッドは省略
