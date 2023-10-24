@@ -6,6 +6,18 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     @user = users(:michael)
   end
 
+  test "login with valid email/invalid password" do
+    get login_path
+    assert_template 'sessions/new'
+    post login_path, params: { session: { email: "michael@example.com",
+                                          password: "invalid" } }
+    assert_response :unprocessable_entity
+    assert_template 'sessions/new'
+    assert_not flash.empty?
+    get root_path
+    assert flash.empty?
+  end
+
   test "login with invalid information" do
     get login_path # ログイン用のパスを開く
     assert_template 'sessions/new' # 新しいセッションのフォームが正しく表示されたことを確認
