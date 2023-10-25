@@ -9,8 +9,9 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   test "login with valid email/invalid password" do
     get login_path
     assert_template 'sessions/new'
-    post login_path, params: { session: { email: "michael@example.com",
+    post login_path, params: { session: { email:    @user.email,
                                           password: "invalid" } }
+    assert_not is_logged_in? # ログインに成功していないことを確認
     assert_response :unprocessable_entity
     assert_template 'sessions/new'
     assert_not flash.empty?
@@ -29,14 +30,23 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert flash.empty? # 移動先のページでフラッシュメッセージが表示されていないことを確認
   end
 
-  test "login with valid information" do
+  test "login with valid information followed by logout" do
     post login_path, params: { session: { email:    @user.email,
                                           password: 'password' } }
+    assert is_logged_in? # ログイン成功の確認
     assert_redirected_to @user
     follow_redirect!
     assert_template 'users/show'
     assert_select "a[href=?]", login_path, count: 0
     assert_select "a[href=?]", logout_path
     assert_select "a[href=?]", user_path(@user)
+    delete logout_path # logoutのURLに対してDELETEリクエスト
+    assert_not is_logged_in? # ログイン状態ではないことを確認
+    assert_response :see_other
+    assert_redirected_to root_url # ルートURLへの遷移を確認
+    follow_redirect!
+    assert_select "a[href=?]", login_path # ログインボタンの表示を確認
+    assert_select "a[href=?]", logout_path,      count: 0 # ログアウトボタンの非表示を確認
+    assert_select "a[href=?]", user_path(@user), count: 0 # プロフィールボタンの非表示を確認
   end
 end
