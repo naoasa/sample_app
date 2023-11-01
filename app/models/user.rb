@@ -30,6 +30,7 @@ class User < ApplicationRecord
 
     # 渡されたトークンがダイジェストと一致したらtrueを返す(authenticated?メソッド)
     def authenticated?(remember_token) # remember_tokenを受け取る
+        return false if remember_digest.nil? # ダイジェストがnilならfalseを返す
         BCrypt::Password.new(remember_digest).is_password?(remember_token) # ここの(remember_token)は、メソッド内のローカル変数を参照している
     end
 

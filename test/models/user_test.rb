@@ -77,4 +77,8 @@ class UserTest < ActiveSupport::TestCase
     # 偽ならパスする
     assert_not @user.valid?
   end
+
+  test "authenticated? should return false for a user with nil digest" do # 記憶ダイジェストがnilならauthenticated?メソッドがfalseを返すテスト
+    assert_not @user.authenticated?('')
+  end
 end
