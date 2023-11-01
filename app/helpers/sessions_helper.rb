@@ -14,14 +14,14 @@ module SessionsHelper
 
     # 記憶トークンcookieに対応するユーザーを返す
     def current_user
-        if (user_id = session[:user_id]) # セッションにユーザーIDが存在すれば
-            @current_user ||= User.find_by(id: user_id) # @current_userに記憶トークンcookieに対応するユーザーを代入するか、そのままにしておく
-        elsif (user_id = cookies.encrypted[:user_id]) # cookieに暗号化されたユーザーIDが存在すれば
-            user = User.find_by(id: user_id)
-            if user && user.authenticated?(cookies[:remember_token])
-                log_in user
-                @current_user = user
-            end
+        if (user_id = session[:user_id])
+          @current_user ||= User.find_by(id: user_id)
+        elsif (user_id = cookies.encrypted[:user_id])
+          user = User.find_by(id: user_id)
+          if user && user.authenticated?(cookies[:remember_token])
+            log_in user
+            @current_user = user
+          end
         end
     end
 
@@ -32,15 +32,15 @@ module SessionsHelper
 
     # 永続的セッションを破棄する(forgetヘルパーメソッド)
     def forget(user)
-        user.forget # forgetメソッドの呼び出し
-        cookies.delete(:user_id) # ユーザーIDのcookiesを削除
-        cookies.delete(:remember_token) # 記憶トークンのcookiesを削除
+        user.forget
+        cookies.delete(:user_id)
+        cookies.delete(:remember_token)
     end
 
     # 現在のユーザーをログアウトする
     def log_out
-        forget(current_user) # current_userの記憶ダイジェストをnilで更新
+        forget(current_user)
         reset_session
-        @current_user = nil # 安全のため
+        @current_user = nil
     end
 end

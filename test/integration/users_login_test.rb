@@ -1,81 +1,81 @@
 require "test_helper"
 
-class UsersLogin < ActionDispatch::IntegrationTest # UsersLoginを定義
+class UsersLogin < ActionDispatch::IntegrationTest
 
   def setup
     @user = users(:michael)
   end
 end
 
-class InvalidPasswordTest < UsersLogin # 誤りパスワードテストのクラス(UsersLoginを継承)
+class InvalidPasswordTest < UsersLogin
 
   test "login path" do
-    get login_path # ログイン画面のGETリクエスト
-    assert_template 'sessions/new' # ログイン画面のビューを確認
+    get login_path
+    assert_template 'sessions/new'
   end
 
-  test "login with valid email/invalid password" do # 正しいメアド/誤りパスワード
+  test "login with valid email/invalid password" do
     post login_path, params: { session: { email:    @user.email,
-                                          password: "invalid"} }
-    assert_not is_logged_in? # ログイン状態ではないことを確認
-    assert_template 'sessions/new' # ログイン画面のビューを確認
-    assert_not flash.empty? # フラッシュメッセージが空ではないことを確認
-    get root_path # ルートURLへ移動
-    assert flash.empty? # フラッシュメッセージが空であることを確認
+                                          password: "invalid" } }
+    assert_not is_logged_in?
+    assert_template 'sessions/new'
+    assert_not flash.empty?
+    get root_path
+    assert flash.empty?
   end
 end
 
-class ValidLogin < UsersLogin # 正しいログインのクラス(UsersLoginを継承)
+class ValidLogin < UsersLogin
 
   def setup
-    super # UsersLoginクラスのメソッドを呼び出す
+    super
     post login_path, params: { session: { email:    @user.email,
-                                          password: 'password'} } # 正しいログイン情報をPOST
+                                          password: 'password' } }
   end
 end
 
-class ValidLoginTest < ValidLogin # 正しいログインテストのクラス(ValidLoginを継承)
+class ValidLoginTest < ValidLogin
 
-  test "valid login" do # 正しいログインのテスト
-    assert is_logged_in? # ログイン状態であることを確認
-    assert_redirected_to @user # ユーザー画面へのリダイレクトを確認
+  test "valid login" do
+    assert is_logged_in?
+    assert_redirected_to @user
   end
 
   test "redirect after login" do
-    follow_redirect! # リダイレクト先に移動
-    assert_template 'users/show' # ユーザー画面のビューを確認
-    assert_select "a[href=?]", login_path, count: 0 # ログインリンクが見えない
-    assert_select "a[href=?]", logout_path # ログアウトリンクが見える
-    assert_select "a[href=?]", user_path(@user) # ユーザーリンクが見える
+    follow_redirect!
+    assert_template 'users/show'
+    assert_select "a[href=?]", login_path, count: 0
+    assert_select "a[href=?]", logout_path
+    assert_select "a[href=?]", user_path(@user)
   end
 end
 
-class Logout < ValidLogin # ログアウトクラスを定義(ValidLoginを継承)
+class Logout < ValidLogin
 
   def setup
-    super # ValidLoginクラスのメソッドを呼び出す
-    delete logout_path # ログアウトURLへDELETEリクエスト
+    super
+    delete logout_path
   end
 end
 
-class LogoutTest < Logout # ログアウトのテスト(Logoutを継承)
+class LogoutTest < Logout
 
-  test "successful logout" do # ログアウトの成功自体をテスト
-    assert_not is_logged_in? # ログイン状態ではないことを確認
-    assert_response :see_other # 303 See Otherを確認
-    assert_redirected_to root_url # ルートURLへのリダイレクトを確認
+  test "successful logout" do
+    assert_not is_logged_in?
+    assert_response :see_other
+    assert_redirected_to root_url
   end
 
-  test "redirect after logout" do # ログアウト後のリダイレクトのテスト
-    follow_redirect! # リダイレクト先に移動(ここからはログアウト後の世界)
-    assert_select "a[href=?]", login_path # ログインリンクが見える
-    assert_select "a[href=?]", logout_path,      count: 0 # ログアウトリンクが見えない
-    assert_select "a[href=?]", user_path(@user), count: 0 # ユーザーリンクが見えない
+  test "redirect after logout" do
+    follow_redirect!
+    assert_select "a[href=?]", login_path
+    assert_select "a[href=?]", logout_path,      count: 0
+    assert_select "a[href=?]", user_path(@user), count: 0
   end
 
-  test "should still work after logout in second window" do # セカンドウィンドウでログアウト後も動作すること
-    delete logout_path # ログアウトURLに対してDELETEリクエスト
-    assert_redirected_to root_url # トップページに遷移したことを確認
+  test "should still work after logout in second window" do
+    delete logout_path
+    assert_redirected_to root_url
   end
 end
 
@@ -86,12 +86,11 @@ class RememberingTest < UsersLogin
     assert_not cookies[:remember_token].blank?
   end
 
-  # # 何故かパスしないので苦肉の策でコメントアウト
-  # test "login without remembering" do
-  #   # Cookieを保存してログイン
-  #   log_in_as(@user, remember_me: '1')
-  #   # Cookieが削除されていることを検証してからログイン
-  #   log_in_as(@user, remember_me: '0')
-  #   assert cookies[:remember_token].blank?
-  # end
+  test "login without remembering" do
+    # Cookieを保存してログイン
+    log_in_as(@user, remember_me: '1')
+    # Cookieが削除されていることを検証してからログイン
+    log_in_as(@user, remember_me: '0')
+    assert cookies[:remember_token].blank?
+  end
 end
