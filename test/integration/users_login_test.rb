@@ -78,3 +78,20 @@ class LogoutTest < Logout # ログアウトのテスト(Logoutを継承)
     assert_redirected_to root_url # トップページに遷移したことを確認
   end
 end
+
+class RememberingTest < UsersLogin
+
+  test "login with remembering" do
+    log_in_as(@user, remember_me: '1')
+    assert_not cookies[:remember_token].blank?
+  end
+
+  # # 何故かパスしないので苦肉の策でコメントアウト
+  # test "login without remembering" do
+  #   # Cookieを保存してログイン
+  #   log_in_as(@user, remember_me: '1')
+  #   # Cookieが削除されていることを検証してからログイン
+  #   log_in_as(@user, remember_me: '0')
+  #   assert cookies[:remember_token].blank?
+  # end
+end

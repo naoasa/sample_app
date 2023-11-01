@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:session][:password])
       # ユーザーログイン後にユーザー情報のページにリダイレクトする
       reset_session # ログインの直前に必ずこれを書くこと
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user) # 条件式 ? trueの処理 : falseの処理
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       remember user # 新しい記憶トークンを生成して、トークンのダイジェストをDBに保存する
       log_in user
       redirect_to user
