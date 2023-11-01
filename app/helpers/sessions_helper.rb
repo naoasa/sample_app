@@ -39,6 +39,7 @@ module SessionsHelper
 
     # 現在のユーザーをログアウトする
     def log_out
+        forget(current_user) # current_userの記憶ダイジェストをnilで更新
         reset_session
         @current_user = nil # 安全のため
     end
