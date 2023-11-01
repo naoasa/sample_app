@@ -22,9 +22,14 @@ class User < ApplicationRecord
         SecureRandom.urlsafe_base64
     end
 
-    # 永続的セッションのためにユーザーをデータベースに記憶する
-    def remember # rememberメソッドを定義
+    # 永続的セッションのためにユーザーをデータベースに記憶する(rememberメソッド)
+    def remember
         self.remember_token = User.new_token
         update_attribute(:remember_digest, User.digest(remember_token))
+    end
+
+    # 渡されたトークンがダイジェストと一致したらtrueを返す(authenticated?メソッド)
+    def authenticated?(remember_token) # remember_tokenを受け取る
+        BCrypt::Password.new(remember_digest).is_password?(remember_token) # ここの(remember_token)は、メソッド内のローカル変数を参照している
     end
 end
