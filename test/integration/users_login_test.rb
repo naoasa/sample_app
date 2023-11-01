@@ -72,4 +72,9 @@ class LogoutTest < Logout # ログアウトのテスト(Logoutを継承)
     assert_select "a[href=?]", logout_path,      count: 0 # ログアウトリンクが見えない
     assert_select "a[href=?]", user_path(@user), count: 0 # ユーザーリンクが見えない
   end
+
+  test "should still work after logout in second window" do # セカンドウィンドウでログアウト後も動作すること
+    delete logout_path # ログアウトURLに対してDELETEリクエスト
+    assert_redirected_to root_url # トップページに遷移したことを確認
+  end
 end
