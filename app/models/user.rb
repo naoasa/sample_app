@@ -32,4 +32,9 @@ class User < ApplicationRecord
     def authenticated?(remember_token) # remember_tokenを受け取る
         BCrypt::Password.new(remember_digest).is_password?(remember_token) # ここの(remember_token)は、メソッド内のローカル変数を参照している
     end
+
+    # ユーザーのログイン情報を破棄する(forgetメソッド)
+    def forget
+        update_attribute(:remember_digest, nil) # 記憶ダイジェストをnilで更新
+    end
 end
