@@ -3,18 +3,31 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/reporters"
 Minitest::Reporters.use!
+include ApplicationHelper # ActiveSupport::TestCaseクラス内にあったものを移動してきた
 
 class ActiveSupport::TestCase
   # 指定のワーカー数でテストを並列実行する
   parallelize(workers: :number_of_processors)
-  # test/fixtures/*.ymlにある全てのfixtureをセットアップする
+  # test/fixtures/*.ymlにあるすべてのfixtureをセットアップする
   fixtures :all
-  include ApplicationHelper
+
   # テストユーザーがログイン中の場合にtrueを返す
   def is_logged_in?
     !session[:user_id].nil?
   end
 
-  # Add more helper methods to be used by all tests here...
-  # 全てのテストで使うその他のヘルパーメソッドは省略
+  # テストユーザーとしてログインする(log_in_asヘルパーメソッド(単体))
+  def log_in_as(user)
+    session[:user_id] = user.id
+  end
+end
+
+class ActionDispatch::IntegrationTest
+
+  # テストユーザーとしてログインする(log_in_asヘルパーメソッド(統合))
+  def log_in_as(user, password: 'password', remember_me: '1')
+    post login_path, params: { session: { email: user.email,
+                                          password: password,
+                                          remember_me: remember_me } }
+  end
 end
