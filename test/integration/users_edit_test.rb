@@ -7,6 +7,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   end
 
   test "unsuccessful edit" do # 編集失敗に対するテスト
+    log_in_as(@user) # テスト前にログイン
     get edit_user_path(@user)
     assert_template 'users/edit'
     patch user_path(@user), params: { user: { name: "",
@@ -18,6 +19,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   end
 
   test "successful edit" do # 編集成功に対するテスト
+    log_in_as(@user) # テスト前にログイン
     get edit_user_path(@user) # 編集ページへGETリクエスト
     assert_template 'users/edit' # 正しいビューの表示
     name = "Foo Bar" # nameに"Foobar"を代入
