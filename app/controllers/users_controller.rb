@@ -26,8 +26,9 @@ class UsersController < ApplicationController
 
   def update # ユーザー情報の更新
     @user = User.find(params[:id])
-    if @user.update(user_params)
-      # 更新に成功した場合を扱う
+    if @user.update(user_params) # 更新に成功した場合
+      flash[:success] = "Profile updated" # 更新成功を示すフラッシュメッセージ
+      redirect_to @user # ユーザーページに遷移
     else
       render 'edit', status: :unprocessable_entity
     end
