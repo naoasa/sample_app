@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, only: [:edit, :update]
+  before_action :correct_user,   only: [:edit, :update]
 
   def show
     @user = User.find(params[:id]) # 例: User.find(1)
@@ -22,11 +23,9 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
   end
 
   def update # ユーザー情報の更新
-    @user = User.find(params[:id])
     if @user.update(user_params) # 更新に成功した場合
       flash[:success] = "Profile updated" # 更新成功を示すフラッシュメッセージ
       redirect_to @user # ユーザーページに遷移
@@ -50,5 +49,11 @@ class UsersController < ApplicationController
         flash[:danger] = "Please log in."
         redirect_to login_url, status: :see_other
       end
+    end
+
+    # 正しいユーザーかどうか確認
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_url, status: :see_other) unless current_user?(@user)
     end
 end
