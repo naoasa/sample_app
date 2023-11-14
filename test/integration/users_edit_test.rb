@@ -18,10 +18,10 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_select "div.alert", "The form contains 4 errors." # alertクラスのdivタグで、4つのエラー文が出る
   end
 
-  test "successful edit" do # 編集成功に対するテスト
-    log_in_as(@user) # テスト前にログイン
-    get edit_user_path(@user) # 編集ページへGETリクエスト
-    assert_template 'users/edit' # 正しいビューの表示
+  test "successful edit with friendly forwarding" do # 編集成功に対するテスト
+    get_edit_user_path(@user) # 編集ページにGETリクエスト
+    log_in_as(@user) # michaelとしてログイン
+    assert_redirected_to edit_user_url(@user) # 編集ページにリダイレクト
     name = "Foo Bar" # nameに"Foobar"を代入
     email = "foo@bar.com" # emailに"foo@bar.com"を代入
     patch user_path(@user), params: { user: { name:  name,
