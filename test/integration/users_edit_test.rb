@@ -19,7 +19,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   end
 
   test "successful edit with friendly forwarding" do # 編集成功に対するテスト
-    get_edit_user_path(@user) # 編集ページにGETリクエスト
+    get edit_user_path(@user) # 編集ページにGETリクエスト
     log_in_as(@user) # michaelとしてログイン
     assert_redirected_to edit_user_url(@user) # 編集ページにリダイレクト
     name = "Foo Bar" # nameに"Foobar"を代入
