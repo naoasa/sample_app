@@ -12,6 +12,11 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should redirect index when not logged in" do # 未ログインのユーザーは一覧ページが見られずログイン画面へリダイレクト
+    get users_path # ユーザー一覧にGETリクエスト
+    assert_redirected_to login_url # ログイン画面へリダイレクト
+  end
+
   test "should redirect edit when not logged in" do
     get edit_user_path(@user) # ユーザー編集URLにGETリクエスト
     assert_not flash.empty? # flashメッセージが空ではない
