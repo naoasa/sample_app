@@ -20,8 +20,10 @@ class UsersEditTest < ActionDispatch::IntegrationTest
 
   test "successful edit with friendly forwarding" do # 編集成功に対するテスト
     get edit_user_path(@user) # 編集ページにGETリクエスト
+    assert_equal session[:forwarding_url], edit_user_url(@user) # フレンドリーフォワーディングで渡されたURLに転送されるのが初回のみ
     log_in_as(@user) # michaelとしてログイン
     assert_redirected_to edit_user_url(@user) # 編集ページにリダイレクト
+    assert_nil session[:forwarding_url] # フレンドリーフォワーディングで渡されたURLに転送されるのが初回のみ
     name = "Foo Bar" # nameに"Foobar"を代入
     email = "foo@bar.com" # emailに"foo@bar.com"を代入
     patch user_path(@user), params: { user: { name:  name,
