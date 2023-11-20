@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :correct_user,   only: [:edit, :update]
 
   def index
-    @users = User.all # 全ユーザーを@usersへ格納(あとでリファクタリングする)
+    @users = User.paginate(page: params[:page]) # ユーザー一覧(ページネーション対応)
   end
 
   def show
