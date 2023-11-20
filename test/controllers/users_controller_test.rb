@@ -45,4 +45,14 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert flash.empty? # flashメッセージが空である
     assert_redirected_to root_url # ルートURLにリダイレクト
   end
+
+  test "should not allow the admin attribute to be edited via the web" do # admin属性はWeb経由で編集できないようにすべき
+    log_in_as(@other_user) # @other_userとしてログイン
+    assert_not @other_user.admin? # @other_userが管理者ではないことを確認
+    patch user_path(@other_user), params: {
+                                    user: { password: "password",
+                                            password_confirmation: "password",
+                                            admin: true } } # Web経由でadmin属性の変更を試みる
+    assert_not @other_user.reload.admin? # @other_userのadmin属性がtrueではない(変わっていない)ことを確認
+  end
 end
