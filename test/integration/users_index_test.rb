@@ -10,7 +10,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     log_in_as(@user) # michaelとしてログイン
     get users_path # '/users'へアクセス
     assert_template 'users/index' # indexビューが表示
-    assert_select 'div.pagination' # paginationクラスを持つdivタグを確認
+    assert_select 'div.pagination', count: 2 # paginationクラスを持つdivタグが2個あることを確認
     User.paginate(page: 1).each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.name
     end
