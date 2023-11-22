@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update] # ログイン後のユーザーに許されたアクション
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy] # ログイン後のユーザーに許されたアクション
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy # destroyアクション実行前のadmin_userフィルター
 

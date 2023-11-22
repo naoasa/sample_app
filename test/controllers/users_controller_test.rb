@@ -3,7 +3,7 @@ require "test_helper"
 class UsersControllerTest < ActionDispatch::IntegrationTest
 
   def setup
-    @user =       users(:michael)
+    @user       = users(:michael)
     @other_user = users(:archer)
   end
 
@@ -54,5 +54,22 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
                                             password_confirmation: "password",
                                             admin: true } } # Web経由でadmin属性の変更を試みる
     assert_not @other_user.reload.admin? # @other_userのadmin属性がtrueではない(変わっていない)ことを確認
+  end
+
+  test "should redirect destroy when not logged in" do # 未ログインのユーザーはdestroy実行時リダイレクトされる
+    assert_no_difference 'User.count' do
+      delete user_path(@user)
+    end
+    assert_response :see_other
+    assert_redirected_to login_url
+  end
+
+  test "should redirect destroy when logged in as a non-admin" do # 管理者でないユーザーはdestroy実行時リダイレクトされる
+    log_in_as(@other_user)
+    assert_no_difference 'User.count' do
+      delete user_path(@user)
+    end
+    assert_response :see_other
+    assert_redirected_to root_url
   end
 end
