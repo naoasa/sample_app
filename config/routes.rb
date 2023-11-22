@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   post   "/login",    to: "sessions#create"
   delete "/logout",   to: "sessions#destroy"
   resources :users
+  resources :account_activations, only: [:edit] # 名前付きルーティング"edit_account_activation_url(token)"が使えるようになる
 end
