@@ -41,6 +41,14 @@ class UsersIndexAdminTest < UsersIndexAdmin
     end
   end
 
+  test "should be able to delete non-admin user" do
+    assert_difference 'User.count', -1 do
+      delete user_path(@non_admin)
+    end
+    assert_response :see_other
+    assert_redirected_to users_url
+  end
+
   test "should display only activated users" do
     # ページにいる最初のユーザーを無効化する。
     # 無効なユーザーを作成するだけでは、
@@ -54,25 +62,25 @@ class UsersIndexAdminTest < UsersIndexAdmin
     end
   end
 
-  test "index as admin including pagination and delete links" do # 管理者はページネーションと削除リンクが見られる
-    assert_template 'users/index' # indexビューが表示
-    assert_select 'div.pagination', count: 2 # paginationクラスを持つdivタグが2個あることを確認
-    User.paginate(page: 1).each do |user|
-      assert_select 'a[href=?]', user_path(user), text: user.name
-    end
-    first_page_of_users = User.paginate(page: 1) # 1ページ目のユーザーたちを変数へ格納
-    first_page_of_users.each do |user| # 1ページ目のユーザーたちでeach文を回す
-      assert_select 'a[href=?]', user_path(user), text: user.name # ユーザー名のaタグ(ユーザーページに飛ぶ)があることを確認
-      unless user == @admin # リンク対象ユーザーが管理者ではない場合
-        assert_select 'a[href=?]', user_path(user), text: 'delete' # [delete]リンクが表示されることを確認
-      end
-    end
-    assert_difference 'User.count', -1 do # ユーザー数が'1'減ることを確認
-      delete user_path(@non_admin) # ユーザー(not管理者)URLに対してDELETEリクエスト
-      assert_response :see_other
-      assert_redirected_to users_url # ユーザー一覧URLにリダイレクト
-    end
-  end
+  # test "index as admin including pagination and delete links" do # 管理者はページネーションと削除リンクが見られる
+  #   assert_template 'users/index' # indexビューが表示
+  #   assert_select 'div.pagination', count: 2 # paginationクラスを持つdivタグが2個あることを確認
+  #   # User.paginate(page: 1).each do |user|
+  #   #   assert_select 'a[href=?]', user_path(user), text: user.name
+  #   # end
+  #   first_page_of_users = User.paginate(page: 1) # 1ページ目のユーザーたちを変数へ格納
+  #   first_page_of_users.each do |user| # 1ページ目のユーザーたちでeach文を回す
+  #     assert_select 'a[href=?]', user_path(user), text: user.name # ユーザー名のaタグ(ユーザーページに飛ぶ)があることを確認
+  #     unless user == @admin # リンク対象ユーザーが管理者ではない場合
+  #       assert_select 'a[href=?]', user_path(user), text: 'delete' # [delete]リンクが表示されることを確認
+  #     end
+  #   end
+  #   assert_difference 'User.count', -1 do # ユーザー数が'1'減ることを確認
+  #     delete user_path(@non_admin) # ユーザー(not管理者)URLに対してDELETEリクエスト
+  #     assert_response :see_other
+  #     assert_redirected_to users_url # ユーザー一覧URLにリダイレクト
+  #   end
+  # end
 
   test "index as non-admin" do # ユーザー(not管理者)がユーザー一覧を見ようとする
     log_in_as(@non_admin) # 一般ユーザーとしてログイン

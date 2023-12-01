@@ -6,12 +6,12 @@ michael:
   activated: true # 有効化済み
   activated_at: <%= Time.zone.now %> # 有効化タイムスタンプ
 
-# inactive: # 無効なユーザー
-#   name: Inactive User
-#   email: inactive@example.com
-#   password_digest: <%= User.digest('password') %>
-#   admin: false
-#   activated: false
+inactive:
+  name: Inactive User
+  email: inactive@example.com
+  password_digest: <%= User.digest('password') %>
+  admin: false
+  activated: false
 
 archer:
   name: Sterling Archer
