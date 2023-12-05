@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-    attr_accessor :remember_token, :activation_token # 外部からアクセスできるようにする
+    attr_accessor :remember_token, :activation_token, :reset_token # 外部からアクセスできるようにする
     before_save   :downcase_email # ユーザー保存前にメソッド実行
     before_create :create_activation_digest # ユーザー作成前にメソッド実行
     validates :name, presence: true, length: { maximum: 50 }
@@ -59,6 +59,19 @@ class User < ApplicationRecord
     def send_activation_email
         UserMailer.account_activation(self).deliver_now
     end
+
+    # パスワード再設定の属性を設定する
+    def create_reset_digest
+        self.reset_token = User.new_token # Userモデルでnew_tokenメソッドにより生成したトークンをreset_tokenに代入
+        update_attribute(:reset_digest,  User.digest(reset_token)) # 先ほど生成したトークンをもとにダイジェストを作成し、reset_digest属性を更新
+        update_attribute(:reset_sent_at, Time.zone.now) # 現在時刻で、reset_sent_at属性を更新
+    end
+
+    # パスワード再設定用のメールを送信する
+    def send_password_reset_email
+        UserMailer.password_reset(self).deliver_now
+    end
+
 
     private # 見せる必要はないメソッド置き場
 
