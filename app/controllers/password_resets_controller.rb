@@ -27,6 +27,7 @@ class PasswordResetsController < ApplicationController
       @user.errors.add(:password, "can't be empty") # エラーメッセージを追加
       render 'edit', status: :unprocessable_entity
     elsif @user.update(user_params) # 新しいパスワードが正しい場合の更新処理 (4)への対応
+      forget(@user) # 演習のコード(これでセッションハイジャックが防止できているはず)
       reset_session # セッションをリセット
       log_in @user # @userとしてログイン
       flash[:success] = "Password has been reset." # 成功メッセージ
