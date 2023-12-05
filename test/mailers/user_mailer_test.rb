@@ -14,12 +14,15 @@ class UserMailerTest < ActionMailer::TestCase
     assert_match CGI.escape(user.email),  mail.body.encoded
   end
 
-  # test "password_reset" do
-  #   mail = UserMailer.password_reset
-  #   assert_equal "Password reset", mail.subject
-  #   assert_equal ["to@example.org"], mail.to
-  #   assert_equal ["from@example.com"], mail.from
-  #   assert_match "Hi", mail.body.encoded
-  # end
+  test "password_reset" do # パスワード再設定用メソッドのテスト
+    user = users(:michael)
+    user.reset_token = User.new_token # reset_tokenを生成
+    mail = UserMailer.password_reset(user)
+    assert_equal "Password reset", mail.subject # メールの件名
+    assert_equal [user.email], mail.to # メールの送信先
+    assert_equal ["user@realdomain.com"], mail.from # メールの送信元
+    assert_match user.reset_token,          mail.body.encoded
+    assert_match CGI.escape(user.email),    mail.body.encoded
+  end
 
 end
