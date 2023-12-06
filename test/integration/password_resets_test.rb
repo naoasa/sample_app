@@ -95,6 +95,7 @@ class PasswordUpdateTest < PasswordResetForm
                     user: { password:              "foobaz123",
                             password_confirmation: "foobaz123" } }
     assert is_logged_in? # ログイン済みであるか
+    assert_nil @reset_user.reload.reset_digest # assert_nilとuser.reloadを組み合わせてreset_digest属性を直接テスト
     assert_not flash.empty? # フラッシュメッセージが空ではないことを確認
     assert_redirected_to @reset_user # ユーザー画面にリダイレクト
   end
