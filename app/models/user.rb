@@ -63,8 +63,10 @@ class User < ApplicationRecord
     # パスワード再設定の属性を設定する
     def create_reset_digest
         self.reset_token = User.new_token # Userモデルでnew_tokenメソッドにより生成したトークンをreset_tokenに代入
-        update_attribute(:reset_digest,  User.digest(reset_token)) # 先ほど生成したトークンをもとにダイジェストを作成し、reset_digest属性を更新
-        update_attribute(:reset_sent_at, Time.zone.now) # 現在時刻で、reset_sent_at属性を更新
+        # update_attribute(:reset_digest,  User.digest(reset_token)) # 先ほど生成したトークンをもとにダイジェストを作成し、reset_digest属性を更新
+        # update_attribute(:reset_sent_at, Time.zone.now) # 現在時刻で、reset_sent_at属性を更新
+        # 上の2行を下記にリファクタリング
+        update_columns(reset_digest: User.digest(reset_token), reset_sent_at: Time.zone.now)
     end
 
     # パスワード再設定用のメールを送信する
