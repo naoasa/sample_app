@@ -81,4 +81,13 @@ class UserTest < ActiveSupport::TestCase
   test "authenticated? should return false for a user with nil digest" do
     assert_not @user.authenticated?(:remember, '') ##
   end
+
+  # ユーザーの削除とともにポストが削除されるかテスト
+  test "associated microposts should be destroyed" do
+    @user.save # 作成したユーザーを保存
+    @user.microposts.create!(content: "Lorem ipsum") # ポストを1つ作成
+    assert_difference 'Micropost.count', -1 do # ポスト数が1個減ることを確認
+      @user.destroy # ユーザーを削除
+    end
+  end
 end

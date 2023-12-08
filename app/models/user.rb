@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-    has_many :microposts # マイクロポストを複数所有する
+    has_many :microposts, dependent: :destroy # マイクロポストを複数所有する, ユーザーとともに削除される
     attr_accessor :remember_token, :activation_token, :reset_token # 外部からアクセスできるようにする
     before_save   :downcase_email # ユーザー保存前にメソッド実行
     before_create :create_activation_digest # ユーザー作成前にメソッド実行
