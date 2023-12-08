@@ -26,4 +26,8 @@ class MicropostTest < ActiveSupport::TestCase
     @micropost.content = "a" * 141 # aが141文字のポスト
     assert_not @micropost.valid? # ポストが有効ではないことを確認
   end
+
+  test "order should be most recent first" do
+    assert_equal microposts(:most_recent), Micropost.first
+  end
 end
