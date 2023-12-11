@@ -19,3 +19,10 @@ User.create!(name:  "Example User",
                activated: true, # 有効化済み
                activated_at: Time.zone.now) # 有効化タイムスタンプ
 end
+
+# ユーザーの一部を対象にマイクロポストを生成する
+users = User.order(:created_at).take(6) # 最初の6人のユーザーを格納
+50.times do
+  content = Faker::Lorem.sentence(word_count: 5) # Faker gemを利用
+  users.each { |user| user.microposts.create!(content: content) }
+end
