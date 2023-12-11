@@ -10,4 +10,5 @@ Rails.application.routes.draw do
   resources :users
   resources :account_activations, only: [:edit] # 名前付きルーティング"edit_account_activation_url(token)"が使えるようになる
   resources :password_resets,     only: [:new, :create, :edit, :update]
+  resources :microposts,          only: [:create, :destroy]
 end
