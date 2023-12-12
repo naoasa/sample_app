@@ -80,6 +80,11 @@ class User < ApplicationRecord
         reset_sent_at < 2.hours.ago # パスワード再設定メールの送信時刻が現在時刻より2時間以上の場合
     end
 
+    # 試作feedの定義
+    # 完全な実装は14章の「ユーザーをフォローする」を参照
+    def feed
+        Micropost.where("user_id = ?", id)
+    end
 
     private # 見せる必要はないメソッド置き場
 
