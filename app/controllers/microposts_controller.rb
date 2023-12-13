@@ -4,6 +4,7 @@ class MicropostsController < ApplicationController
 
   def create
     @micropost = current_user.microposts.build(micropost_params)
+    @micropost.image.attach(params[:micropost][:image])
     if @micropost.save # ポストが保存されたら
       flash[:success] = "Micropost created!"
       redirect_to root_url
@@ -27,7 +28,7 @@ class MicropostsController < ApplicationController
   private
 
     def micropost_params # Strong Parameters
-      params.require(:micropost).permit(:content)
+      params.require(:micropost).permit(:content, :image) # 許可済み属性リスト
     end
 
     def correct_user
