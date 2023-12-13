@@ -1,6 +1,6 @@
 require "test_helper"
 
-class MicropostInterface < ActionDispatch::IntegrationTest
+class MicropostsInterface < ActionDispatch::IntegrationTest
 
   def setup # michaelとしてログイン
     @user = users(:michael)
@@ -8,7 +8,7 @@ class MicropostInterface < ActionDispatch::IntegrationTest
   end
 end
 
-class MicropostsInterfaceTest < MicropostInterface
+class MicropostsInterfaceTest < MicropostsInterface
 
   test "should paginate microposts" do
     get root_path # ルートパスにGETリクエスト
@@ -56,7 +56,7 @@ class MicropostsInterfaceTest < MicropostInterface
   end
 end
 
-class MicropostSidebarTest < MicropostInterface
+class MicropostSidebarTest < MicropostsInterface
 
   test "should display the right micropost count" do
     get root_path
@@ -68,5 +68,20 @@ class MicropostSidebarTest < MicropostInterface
     log_in_as(users(:lana)) # lana(ポストが1件のユーザー)としてログイン
     get root_path # ルートパスにGETリクエスト
     assert_match "1 micropost", response.body
+  end
+end
+
+class ImageUploadTest < MicropostsInterface
+
+  test "should have a file input field for images" do
+    get root_path
+    assert_select 'input[type=file]'
+  end
+
+  test "should be able to attach an image" do
+    cont = "This micropost really ties the room together."
+    img = fixture_file_upload('kitten.jpg', 'image/jpeg')
+    post microposts_path, params: { micropost: { content: cont, image: img } }
+    assert assigns(:micropost).image.attached? # assignsメソッドを使い、投稿成功後にcreateアクション内のポストにアクセスする
   end
 end
