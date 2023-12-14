@@ -2,6 +2,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails",           "7.0.4"
+gem "active_storage_validations", "0.9.8" # Active Storageのバリデーション機能
 gem "bcrypt",          "3.1.18" # bcrypt(ハッシュ関数のライブラリ)
 gem "faker",           "2.21.0" # 架空のユーザーを作成
 gem "will_paginate",   "3.3.1" # ページネーションを作成
