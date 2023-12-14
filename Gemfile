@@ -2,6 +2,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails",           "7.0.4"
+gem "image_processing", "1.12.2"
 gem "active_storage_validations", "0.9.8" # Active Storageのバリデーション機能
 gem "bcrypt",          "3.1.18" # bcrypt(ハッシュ関数のライブラリ)
 gem "faker",           "2.21.0" # 架空のユーザーを作成
@@ -17,9 +18,10 @@ gem "jbuilder",        "2.11.5"
 gem "puma",            "5.6.4"
 gem "bootsnap",        "1.12.0", require: false
 gem "ruby-lsp"
+gem "sqlite3", "1.6.1"
 
 group :development, :test do
-  gem "sqlite3", "1.4.2"
+  # gem "sqlite3", "1.4.2"
   gem "debug",   "1.5.0", platforms: %i[ mri mingw x64_mingw ]
 end
 
