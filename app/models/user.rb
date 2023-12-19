@@ -1,5 +1,8 @@
 class User < ApplicationRecord
     has_many :microposts, dependent: :destroy # マイクロポストを複数所有する, ユーザーとともに削除される
+    has_many :active_relationships, class_name:  "Relationship",
+                                    foreign_key: "follower_id",
+                                    dependent:   :destroy
     attr_accessor :remember_token, :activation_token, :reset_token # 外部からアクセスできるようにする
     before_save   :downcase_email # ユーザー保存前にメソッド実行
     before_create :create_activation_digest # ユーザー作成前にメソッド実行
