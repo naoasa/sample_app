@@ -1,9 +1,13 @@
 class User < ApplicationRecord
     has_many :microposts, dependent: :destroy # マイクロポストを複数所有する, ユーザーとともに削除される
-    has_many :active_relationships, class_name:  "Relationship",
-                                    foreign_key: "follower_id",
-                                    dependent:   :destroy
-    has_many :following, through: :active_relationships, source: :followed # following配列のソースはfollowed_idのコレクションであると明示
+    has_many :active_relationships,  class_name:  "Relationship",
+                                     foreign_key: "follower_id",
+                                     dependent:   :destroy
+    has_many :passive_relationships, class_name:  "Relationship",
+                                     foreign_key: "followed_id",
+                                     dependent:   :destroy
+    has_many :following, through: :active_relationships,  source: :followed # following配列のソースはfollowed_idのコレクションであると明示
+    has_many :followers, through: :passive_relationships, source: :follower # followers配列のソースはfollower
     attr_accessor :remember_token, :activation_token, :reset_token # 外部からアクセスできるようにする
     before_save   :downcase_email # ユーザー保存前にメソッド実行
     before_create :create_activation_digest # ユーザー作成前にメソッド実行
