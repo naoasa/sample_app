@@ -3,6 +3,7 @@ class User < ApplicationRecord
     has_many :active_relationships, class_name:  "Relationship",
                                     foreign_key: "follower_id",
                                     dependent:   :destroy
+    has_many :following, through: :active_relationships, source: :followed # following配列のソースはfollowed_idのコレクションであると明示
     attr_accessor :remember_token, :activation_token, :reset_token # 外部からアクセスできるようにする
     before_save   :downcase_email # ユーザー保存前にメソッド実行
     before_create :create_activation_digest # ユーザー作成前にメソッド実行
@@ -87,6 +88,21 @@ class User < ApplicationRecord
     # 完全な実装は14章の「ユーザーをフォローする」を参照
     def feed
         Micropost.where("user_id = ?", id)
+    end
+
+    # ユーザーをフォローする
+    def follow(other_user)
+        following << other_user unless self == other_user # ユーザー自身がother_userでない限りは、following配列にother_userを追加する
+    end
+
+    # ユーザーをフォロー解除する
+    def unfollow(other_user)
+        following.delete(other_user) # 配列からother_userを削除
+    end
+
+    # 現在のユーザーが他のユーザーをフォローしていればtrueを返す
+    def following?(other_user)
+        following.include?(other_user) # following配列にother_userが含まれるか判定
     end
 
     private # 見せる必要はないメソッド置き場
