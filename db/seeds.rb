@@ -26,3 +26,11 @@ users = User.order(:created_at).take(6) # 最初の6人のユーザーを格納
   content = Faker::Lorem.sentence(word_count: 5) # Faker gemを利用
   users.each { |user| user.microposts.create!(content: content) }
 end
+
+# ユーザーフォローのリレーションシップを作成する
+users = User.all
+user  = users.first
+following = users[2..50] # ユーザー3〜51
+followers = users[3..40] # ユーザー4〜41
+following.each { |followed| user.follow(followed) } # ユーザー3〜51をフォロー
+followers.each { |follower| follower.follow(user) } # ユーザー4〜41がユーザー1をフォロー
