@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   get    "/login",    to: "sessions#new"
   post   "/login",    to: "sessions#create"
   delete "/logout",   to: "sessions#destroy"
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   resources :account_activations, only: [:edit] # 名前付きルーティング"edit_account_activation_url(token)"が使えるようになる
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :microposts,          only: [:create, :destroy]
