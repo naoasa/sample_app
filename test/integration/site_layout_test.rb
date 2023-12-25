@@ -37,4 +37,14 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     get edit_user_path(@user) # "/users/:id/edit"へアクセス
     assert_select "title", full_title("Edit user")
   end
+
+  test "should display stats" do
+    log_in_as(@user) # michaelとしてログイン
+    get root_path # ルートURLへGETリクエスト
+    assert_select "div.stats" # statsクラスのdivタグがある
+    assert_select "a[href=?]", following_user_path(@user) # フォロイー一覧のリンクがある
+    assert_select "a[href=?]", followers_user_path(@user) # フォロワー一覧のリンクがある
+    assert_match @user.active_relationships.count.to_s, response.body # フォロー数が表示されている
+    assert_match @user.passive_relationships.count.to_s, response.body # フォロワー数が表示されている
+  end
 end

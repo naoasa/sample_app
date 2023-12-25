@@ -19,4 +19,13 @@ class UsersProfileTest < ActionDispatch::IntegrationTest
       assert_match micropost.content, response.body
     end
   end
+
+  test "should display stats on profile" do
+    get user_path(@user)
+    assert_select "div.stats" # statsクラスのdivタグがある
+    assert_select "a[href=?]", following_user_path(@user) # フォロイー一覧のリンクがある
+    assert_select "a[href=?]", followers_user_path(@user) # フォロワー一覧のリンクがある
+    assert_match @user.active_relationships.count.to_s, response.body # フォロー数が表示されている
+    assert_match @user.passive_relationships.count.to_s, response.body # フォロワー数が表示されている
+  end
 end
