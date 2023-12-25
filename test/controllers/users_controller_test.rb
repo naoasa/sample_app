@@ -72,4 +72,15 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :see_other
     assert_redirected_to root_url
   end
+
+  test "should redirect following when not logged in" do # ログインしていないユーザーはフォロー一覧を見れない
+    get following_user_path(@user) # michaelのフォロイー一覧にGETリクエスト
+    assert_redirected_to login_url # ログインURLにリダイレクト
+  end
+
+  test "should redirect followers when not logged in" do # ログインしていないユーザーはフォロワー一覧を見れない
+    get followers_user_path(@user) # michaelのフォロワー一覧にGETリクエスト
+    assert_redirected_to login_url # ログインURLにリダイレクト
+  end
+
 end
